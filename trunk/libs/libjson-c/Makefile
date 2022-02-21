@@ -1,9 +1,9 @@
-SRC_NAME=json-c-json-c-0.13.1-20180305
-SRC_URL=https://github.com/json-c/json-c/archive/json-c-0.13.1-20180305.tar.gz
-ARCHIVE_NAME=json-c-0.13.1-20180305
+SRC_NAME=json-c-json-c-0.15-20200726
+SRC_URL=https://github.com/json-c/json-c/archive/json-c-0.15-20200726.tar.gz
+ARCHIVE_NAME=json-c-0.15-20200726
 
 all: download_test extract_test config_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
 	( if [ ! -f $(ARCHIVE_NAME).tar.gz ]; then \
@@ -23,25 +23,22 @@ config_test:
 	fi )
 
 configure:
-	( cd $(SRC_NAME) ; \
-	sh autogen.sh; \
-	sed -e 's/#undef malloc.*//g' -e 's/#undef realloc.*//g' -i config.h.in; \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		--enable-static \
-		--enable-shared \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=../../cross-mipsel-linux.cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_STATIC_LIBS=ON \
+	.. \
 	)
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) distclean ; \
-	fi ; \
+	rm -rf $(SRC_NAME)/build
 	rm -f config_done
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
 	cp -fP $(DESTDIR)/lib/libjson-c.so* $(ROMFSDIR)/lib

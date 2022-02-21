@@ -13,4 +13,4 @@ if [ ! -e $DL_NAME ]; then
 	curl -O -L $DL_URL
 fi
 
-tar -xvf $DL_NAME $DIR
+tar -xf $DL_NAME $DIR
