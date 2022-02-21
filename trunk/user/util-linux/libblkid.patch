@@ -1,35 +1,3 @@
-diff -ur util-linux-2.33-ref/configure util-linux-2.33/configure
---- util-linux-2.33-ref/configure	2018-11-08 10:20:47.228286700 +0300
-+++ util-linux-2.33/configure	2018-11-08 10:14:44.095653000 +0300
-@@ -24068,17 +24068,18 @@
- 
- 
- 
--  if test "x$ul_default_estate" != x; then
--  enable_blkid=$ul_default_estate
--  build_blkid=yes
--  if test "x$ul_default_estate" = xno; then
--    build_blkid=no
--  fi
--else
-+#  if test "x$ul_default_estate" != x; then
-+#  enable_blkid=$ul_default_estate
-+#  build_blkid=yes
-+#  if test "x$ul_default_estate" = xno; then
-+#    build_blkid=no
-+#  fi
-+#else
- 
-   build_blkid=yes
--  enable_blkid=check
--fi
-+  enable_blkid=yes
-+#  enable_blkid=check
-+#fi
- 
- 
- 
-Only in util-linux-2.33-ref/libblkid/docs: version.xml
 diff -ur util-linux-2.33-ref/libblkid/src/partitions/dos.c util-linux-2.33/libblkid/src/partitions/dos.c
 --- util-linux-2.33-ref/libblkid/src/partitions/dos.c	2018-11-08 10:20:44.380372400 +0300
 +++ util-linux-2.33/libblkid/src/partitions/dos.c	2018-11-08 10:14:44.126866700 +0300
@@ -72,7 +40,7 @@ diff -ur util-linux-2.33-ref/libblkid/src/partitions/partitions.c util-linux-2.3
 diff -ur util-linux-2.33-ref/libblkid/src/superblocks/superblocks.c util-linux-2.33/libblkid/src/superblocks/superblocks.c
 --- util-linux-2.33-ref/libblkid/src/superblocks/superblocks.c	2018-11-08 10:20:44.651826900 +0300
 +++ util-linux-2.33/libblkid/src/superblocks/superblocks.c	2018-11-08 10:14:44.142490500 +0300
-@@ -87,84 +87,20 @@
+@@ -89,87 +89,20 @@
   */
  static const struct blkid_idinfo *idinfos[] =
  {
@@ -91,6 +59,7 @@ diff -ur util-linux-2.33-ref/libblkid/src/superblocks/superblocks.c util-linux-2
 -	&jmraid_idinfo,
 -
 -	&bcache_idinfo,
+-	&bluestore_idinfo,
 -	&drbd_idinfo,
 -	&drbdmanage_idinfo,
 -	&drbdproxy_datalog_idinfo,
@@ -153,8 +122,10 @@ diff -ur util-linux-2.33-ref/libblkid/src/superblocks/superblocks.c util-linux-2
 -	&exfat_idinfo,
 -	&f2fs_idinfo,
 -	&mpool_idinfo,
--	&apfs_idinfo
-+	&exfat_idinfo
+-	&apfs_idinfo,
+-	&zonefs_idinfo,
+-	&erofs_idinfo
++   &exfat_idinfo
  };
  
  /*
@@ -164,17 +135,13 @@ diff -ur util-linux-2.33-ref/libblkid/src/topology/topology.c util-linux-2.33/li
 @@ -76,11 +76,7 @@
  {
  #ifdef __linux__
- 	&ioctl_tp_idinfo,
--	&sysfs_tp_idinfo,
+ 	&sysfs_tp_idinfo,
+-	&ioctl_tp_idinfo,
 -	&md_tp_idinfo,
 -	&dm_tp_idinfo,
 -	&lvm_tp_idinfo,
 -	&evms_tp_idinfo
-+	&sysfs_tp_idinfo
++	&ioctl_tp_idinfo
  #endif
  };
  
-Only in util-linux-2.33-ref/libfdisk/docs: version.xml
-Only in util-linux-2.33-ref/libmount/docs: version.xml
-Only in util-linux-2.33-ref/libsmartcols/docs: version.xml
-Only in util-linux-2.33-ref/misc-utils: uuidd.8
