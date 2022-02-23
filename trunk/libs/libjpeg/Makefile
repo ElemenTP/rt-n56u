@@ -1,5 +1,5 @@
-SRC_NAME=jpeg-9c
-SRC_URL=http://www.ijg.org/files/jpegsrc.v9c.tar.gz
+SRC_NAME=jpeg-9e
+SRC_URL=http://www.ijg.org/files/jpegsrc.v9e.tar.gz
 
 all: download_test extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
