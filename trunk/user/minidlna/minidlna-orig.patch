@@ -16,12 +16,12 @@ diff -urw minidlna-1.2.1-ref/configure minidlna-1.2.1/configure
 +++ minidlna-1.2.1/configure	2018-02-15 16:08:12.773369000 +0300
 @@ -624,6 +624,8 @@
  LTLIBOBJS
- STATIC_LDFLAGS
- STATIC_CFLAGS
 +ASUS_SUPPORT_FALSE
 +ASUS_SUPPORT_TRUE
  TIVO_SUPPORT_FALSE
  TIVO_SUPPORT_TRUE
+ HAVE_KQUEUE_FALSE
+ HAVE_KQUEUE_TRUE
  HAVE_AVAHI_FALSE
 @@ -774,6 +776,7 @@
  with_os_version
@@ -1009,7 +1009,7 @@ diff -urw minidlna-1.2.1-ref/upnpglobalvars.c minidlna-1.2.1/upnpglobalvars.c
 diff -urw minidlna-1.2.1-ref/upnpglobalvars.h minidlna-1.2.1/upnpglobalvars.h
 --- minidlna-1.2.1-ref/upnpglobalvars.h	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/upnpglobalvars.h	2018-01-13 17:28:58.000000000 +0300
-@@ -190,15 +190,17 @@
+@@ -190,17 +190,19 @@
  #define WIDE_LINKS_MASK       0x0040
  #ifdef HAVE_AVAHI
  #define TIVO_BONJOUR_MASK     0x0080
@@ -1020,6 +1020,8 @@ diff -urw minidlna-1.2.1-ref/upnpglobalvars.h minidlna-1.2.1/upnpglobalvars.h
  #endif
  #define SCANNING_MASK         0x0100
  #define RESCAN_MASK           0x0200
+ #define SUBTITLES_MASK        0x0400
+ #define FORCE_ALPHASORT_MASK  0x0800
  
 -#define SETFLAG(mask)	runtime_flags |= mask
 +#define SETFLAG(mask)	(runtime_flags |= mask)
@@ -1033,7 +1035,7 @@ diff -urw minidlna-1.2.1-ref/upnphttp.c minidlna-1.2.1/upnphttp.c
 --- minidlna-1.2.1-ref/upnphttp.c	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/upnphttp.c	2018-01-12 19:08:17.000000000 +0300
 @@ -1053,12 +1053,12 @@
- 		n = recv(h->socket, buf, 2048, 0);
+ 		n = recv(h->ev.fd, buf, 2048, 0);
  		if(n<0)
  		{
 -			DPRINTF(E_ERROR, L_HTTP, "recv (state0): %s\n", strerror(errno));
@@ -1042,13 +1044,12 @@ diff -urw minidlna-1.2.1-ref/upnphttp.c minidlna-1.2.1/upnphttp.c
  		}
  		else if(n==0)
  		{
--			DPRINTF(E_WARN, L_HTTP, "HTTP Connection closed unexpectedly\n");
-+			DPRINTF(E_DEBUG, L_HTTP, "HTTP Connection closed unexpectedly\n");
+ 			DPRINTF(E_DEBUG, L_HTTP, "HTTP Connection closed unexpectedly\n");
  			h->state = 100;
  		}
  		else
 @@ -1099,12 +1099,12 @@
- 		n = recv(h->socket, buf, sizeof(buf), 0);
+ 		n = recv(h->ev.fd, buf, sizeof(buf), 0);
  		if(n < 0)
  		{
 -			DPRINTF(E_ERROR, L_HTTP, "recv (state%d): %s\n", h->state, strerror(errno));
@@ -1057,20 +1058,10 @@ diff -urw minidlna-1.2.1-ref/upnphttp.c minidlna-1.2.1/upnphttp.c
  		}
  		else if(n == 0)
  		{
--			DPRINTF(E_WARN, L_HTTP, "HTTP Connection closed unexpectedly\n");
-+			DPRINTF(E_DEBUG, L_HTTP, "HTTP Connection closed unexpectedly\n");
+ 			DPRINTF(E_DEBUG, L_HTTP, "HTTP Connection closed unexpectedly\n");
  			h->state = 100;
  		}
  		else
-@@ -1620,7 +1620,7 @@
- 	char *resolution = NULL;
- 	char *key, *val;
- 	char *saveptr, *item = NULL;
--	int rotate;
-+	int rotate = 0;
- 	int pixw = 0, pixh = 0;
- 	long long id;
- 	int rows=0, chunked, ret;
 diff -urw minidlna-1.2.1-ref/utils.c minidlna-1.2.1/utils.c
 --- minidlna-1.2.1-ref/utils.c	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/utils.c	2018-01-12 19:04:06.000000000 +0300
