@@ -1,4 +1,4 @@
-SRC_NAME=sqlite-autoconf-3380500
+SRC_NAME=sqlite-autoconf-3390000
 SRC_URL=https://www.sqlite.org/2022/$(SRC_NAME).tar.gz
 
 all: download_test extract_test config_test
