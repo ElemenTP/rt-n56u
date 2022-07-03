@@ -5,7 +5,7 @@ diff -urw flac-1.3.2-ref/Makefile.am flac-1.3.2/Makefile.am
  
  ACLOCAL_AMFLAGS = -I m4
  
--SUBDIRS = doc include m4 man src test build objs microbench
+-SUBDIRS = doc include m4 man src test build microbench oss-fuzz
 +SUBDIRS = include m4 src build objs
  
  if EXAMPLES
