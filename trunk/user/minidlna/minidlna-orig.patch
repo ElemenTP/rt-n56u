@@ -14,15 +14,15 @@ diff -urw minidlna-1.2.1-ref/config.h.in minidlna-1.2.1/config.h.in
 diff -urw minidlna-1.2.1-ref/configure minidlna-1.2.1/configure
 --- minidlna-1.2.1-ref/configure	2017-08-24 21:56:41.000000000 +0300
 +++ minidlna-1.2.1/configure	2018-02-15 16:08:12.773369000 +0300
-@@ -624,6 +624,8 @@
+@@ -622,6 +622,8 @@
+ ac_subst_vars='am__EXEEXT_FALSE
+ am__EXEEXT_TRUE
  LTLIBOBJS
 +ASUS_SUPPORT_FALSE
 +ASUS_SUPPORT_TRUE
  TIVO_SUPPORT_FALSE
  TIVO_SUPPORT_TRUE
  HAVE_KQUEUE_FALSE
- HAVE_KQUEUE_TRUE
- HAVE_AVAHI_FALSE
 @@ -774,6 +776,7 @@
  with_os_version
  with_os_url
@@ -31,7 +31,7 @@ diff -urw minidlna-1.2.1-ref/configure minidlna-1.2.1/configure
  enable_netgear
  enable_readynas
  enable_static
-@@ -1415,6 +1418,7 @@
+@@ -1427,6 +1430,7 @@
    --disable-rpath         do not hardcode runtime library paths
    --disable-nls           do not use Native Language Support
    --enable-tivo           enable TiVo support
@@ -39,7 +39,7 @@ diff -urw minidlna-1.2.1-ref/configure minidlna-1.2.1/configure
    --enable-netgear        enable generic NETGEAR device support
    --enable-readynas       enable NETGEAR ReadyNAS support
    --enable-static         build a static binary executable
-@@ -10456,6 +10460,55 @@
+@@ -10516,6 +10520,55 @@
  fi
  
  
@@ -95,7 +95,7 @@ diff -urw minidlna-1.2.1-ref/configure minidlna-1.2.1/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable generic NETGEAR device support" >&5
  $as_echo_n "checking whether to enable generic NETGEAR device support... " >&6; }
  # Check whether --enable-netgear was given.
-@@ -10827,6 +10880,18 @@
+@@ -10908,6 +10961,18 @@
    as_fn_error $? "conditional \"TIVO_SUPPORT\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
  fi
@@ -117,7 +117,7 @@ diff -urw minidlna-1.2.1-ref/configure minidlna-1.2.1/configure
 diff -urw minidlna-1.2.1-ref/configure.ac minidlna-1.2.1/configure.ac
 --- minidlna-1.2.1-ref/configure.ac	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/configure.ac	2018-02-15 16:07:42.109369000 +0300
-@@ -559,6 +559,23 @@
+@@ -561,6 +561,23 @@
  	]
  )
  
@@ -844,7 +844,7 @@ diff -urw minidlna-1.2.1-ref/libav.h minidlna-1.2.1/libav.h
 diff -urw minidlna-1.2.1-ref/metadata.c minidlna-1.2.1/metadata.c
 --- minidlna-1.2.1-ref/metadata.c	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/metadata.c	2018-01-12 19:56:37.000000000 +0300
-@@ -588,6 +588,8 @@
+@@ -606,6 +606,8 @@
  		/* We might need to verify that the thumbnail is 160x160 or smaller */
  		if( ed->size > 12000 )
  		{
@@ -853,7 +853,7 @@ diff -urw minidlna-1.2.1-ref/metadata.c minidlna-1.2.1/metadata.c
  			imsrc = image_new_from_jpeg(NULL, 0, ed->data, ed->size, 1, ROTATE_NONE);
  			if( imsrc )
  			{
-@@ -596,6 +598,7 @@
+@@ -614,6 +616,7 @@
  				image_free(imsrc);
  			}
  		}
@@ -864,7 +864,7 @@ diff -urw minidlna-1.2.1-ref/metadata.c minidlna-1.2.1/metadata.c
 diff -urw minidlna-1.2.1-ref/minidlna.c minidlna-1.2.1/minidlna.c
 --- minidlna-1.2.1-ref/minidlna.c	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/minidlna.c	2018-01-12 19:54:06.000000000 +0300
-@@ -338,6 +338,7 @@
+@@ -387,6 +387,7 @@
  	}
  
  	ret = db_upgrade(db);
@@ -872,7 +872,7 @@ diff -urw minidlna-1.2.1-ref/minidlna.c minidlna-1.2.1/minidlna.c
  	if (ret != 0)
  	{
  rescan:
-@@ -361,7 +362,7 @@
+@@ -410,7 +411,7 @@
  		if (CreateDatabase() != 0)
  			DPRINTF(E_FATAL, L_GENERAL, "ERROR: Failed to create sqlite database!  Exiting...\n");
  	}
@@ -880,8 +880,8 @@ diff -urw minidlna-1.2.1-ref/minidlna.c minidlna-1.2.1/minidlna.c
 +	if (ret || GETFLAG(RESCAN_MASK) || GETFLAG(UPDATE_SCAN_MASK))
  	{
  #if USE_FORK
- 		SETFLAG(SCANNING_MASK);
-@@ -882,6 +883,9 @@
+ 		sqlite3_close(db);
+@@ -956,6 +957,9 @@
  			SETFLAG(SYSTEMD_MASK);
  			break;
  #endif
@@ -891,9 +891,9 @@ diff -urw minidlna-1.2.1-ref/minidlna.c minidlna-1.2.1/minidlna.c
  		case 'V':
  			printf("Version " MINIDLNA_VERSION "\n");
  			exit(0);
-@@ -916,6 +920,7 @@
- #ifdef __linux__
- 			"\t-S changes behaviour for systemd\n"
+@@ -990,6 +994,7 @@
+ #if defined(__linux__) || defined(__APPLE__)
+ 			"\t-S changes behaviour for systemd/launchd\n"
  #endif
 +			"\t-U starts an update scan\n"
  			"\t-V print the version number\n",
@@ -999,7 +999,7 @@ diff -urw minidlna-1.2.1-ref/upnpglobalvars.c minidlna-1.2.1/upnpglobalvars.c
 +++ minidlna-1.2.1/upnpglobalvars.c	2018-01-12 19:09:37.000000000 +0300
 @@ -60,7 +60,7 @@
  struct runtime_vars_s runtime_vars;
- uint32_t runtime_flags = INOTIFY_MASK | TIVO_BONJOUR_MASK;
+ uint32_t runtime_flags = INOTIFY_MASK | TIVO_BONJOUR_MASK | SUBTITLES_MASK;
  
 -const char *pidfilename = "/var/run/minidlna/minidlna.pid";
 +const char *pidfilename = "/var/run/minidlna.pid";
@@ -1009,7 +1009,7 @@ diff -urw minidlna-1.2.1-ref/upnpglobalvars.c minidlna-1.2.1/upnpglobalvars.c
 diff -urw minidlna-1.2.1-ref/upnpglobalvars.h minidlna-1.2.1/upnpglobalvars.h
 --- minidlna-1.2.1-ref/upnpglobalvars.h	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/upnpglobalvars.h	2018-01-13 17:28:58.000000000 +0300
-@@ -190,17 +190,19 @@
+@@ -197,17 +197,19 @@
  #define WIDE_LINKS_MASK       0x0040
  #ifdef HAVE_AVAHI
  #define TIVO_BONJOUR_MASK     0x0080
@@ -1034,7 +1034,7 @@ diff -urw minidlna-1.2.1-ref/upnpglobalvars.h minidlna-1.2.1/upnpglobalvars.h
 diff -urw minidlna-1.2.1-ref/upnphttp.c minidlna-1.2.1/upnphttp.c
 --- minidlna-1.2.1-ref/upnphttp.c	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/upnphttp.c	2018-01-12 19:08:17.000000000 +0300
-@@ -1053,12 +1053,12 @@
+@@ -1074,7 +1074,7 @@
  		n = recv(h->ev.fd, buf, 2048, 0);
  		if(n<0)
  		{
@@ -1043,12 +1043,7 @@ diff -urw minidlna-1.2.1-ref/upnphttp.c minidlna-1.2.1/upnphttp.c
  			h->state = 100;
  		}
  		else if(n==0)
- 		{
- 			DPRINTF(E_DEBUG, L_HTTP, "HTTP Connection closed unexpectedly\n");
- 			h->state = 100;
- 		}
- 		else
-@@ -1099,12 +1099,12 @@
+@@ -1120,7 +1120,7 @@
  		n = recv(h->ev.fd, buf, sizeof(buf), 0);
  		if(n < 0)
  		{
@@ -1057,15 +1052,10 @@ diff -urw minidlna-1.2.1-ref/upnphttp.c minidlna-1.2.1/upnphttp.c
  			h->state = 100;
  		}
  		else if(n == 0)
- 		{
- 			DPRINTF(E_DEBUG, L_HTTP, "HTTP Connection closed unexpectedly\n");
- 			h->state = 100;
- 		}
- 		else
 diff -urw minidlna-1.2.1-ref/utils.c minidlna-1.2.1/utils.c
 --- minidlna-1.2.1-ref/utils.c	2017-08-24 20:28:25.000000000 +0300
 +++ minidlna-1.2.1/utils.c	2018-01-12 19:04:06.000000000 +0300
-@@ -398,6 +398,7 @@
+@@ -400,6 +400,7 @@
  		ends_with(file, ".mts") || ends_with(file, ".m2ts")  ||
  		ends_with(file, ".m2t") || ends_with(file, ".mkv")   ||
  		ends_with(file, ".vob") || ends_with(file, ".ts")    ||

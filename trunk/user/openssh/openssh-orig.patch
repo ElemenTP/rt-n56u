@@ -1,9 +1,7 @@
 diff -rup openssh-8.8p1/Makefile.in openssh-8.8p1-new/Makefile.in
 --- openssh-8.8p1/Makefile.in	2019-10-09 08:31:03.000000000 +0800
 +++ openssh-8.8p1-new/Makefile.in	2019-11-23 22:04:29.542578021 +0800
-@@ -203,44 +203,45 @@
- always:
- 
+@@ -207,42 +207,43 @@
  libssh.a: $(LIBSSH_OBJS)
  	$(AR) rv $@ $(LIBSSH_OBJS)
  	$(RANLIB) $@

@@ -39,10 +39,13 @@ configure:
 		--with-privsep-path=/var/empty \
 		--with-privsep-user=sshd \
 		--with-sandbox=no \
+		--without-osfsia \
 		--without-pam \
 		--without-selinux \
 		--without-bsd-auth \
 		--without-kerberos5 \
+		--disable-pkcs11 \
+		--disable-security-key \
 		--disable-strip \
 		--disable-etc-default-login \
 		--disable-lastlog \
