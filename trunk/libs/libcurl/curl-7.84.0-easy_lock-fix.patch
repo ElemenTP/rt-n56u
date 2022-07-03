@@ -1,0 +1,12 @@
+--- curl-7.84.0-orig/lib/easy_lock.h	2022-06-27 04:58:05.000000000 +0800
++++ curl-7.84.0/lib/easy_lock.h	2022-07-03 23:04:41.274217959 +0800
+@@ -36,6 +36,9 @@
+ 
+ #elif defined (HAVE_ATOMIC)
+ #include <stdatomic.h>
++#if defined(HAVE_SCHED_YIELD)
++#include <sched.h>
++#endif
+ 
+ #define curl_simple_lock atomic_bool
+ #define CURL_SIMPLE_LOCK_INIT false
