@@ -1,5 +1,5 @@
-SRC_NAME = htop-3.1.2
-SRC_URL = https://github.com/htop-dev/htop/releases/download/3.1.2/htop-3.1.2.tar.xz
+SRC_NAME = htop-3.2.1
+SRC_URL = https://github.com/htop-dev/htop/releases/download/3.2.1/htop-3.2.1.tar.xz
 THISDIR = $(shell pwd)
 
 all: download_test extract_test config_test

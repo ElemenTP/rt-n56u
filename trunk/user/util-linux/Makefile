@@ -1,5 +1,5 @@
-SRC_NAME=util-linux-2.37.4
-SRC_URL=https://www.kernel.org/pub/linux/utils/util-linux/v2.37/util-linux-2.37.4.tar.xz
+SRC_NAME=util-linux-2.38
+SRC_URL=https://www.kernel.org/pub/linux/utils/util-linux/v2.38/util-linux-2.38.tar.xz
 
 THISDIR = $(shell pwd)
 
@@ -34,6 +34,7 @@ configure:
 	scanf_cv_type_modifier=no \
 	./configure \
 		--prefix=$(STAGEDIR) \
+		--disable-all-programs \
 		--without-tinfo \
 		--without-ncurses \
 		--without-user \

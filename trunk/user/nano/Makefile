@@ -1,5 +1,5 @@
-SRC_NAME = nano-6.2
-SRC_URL = https://www.nano-editor.org/dist/v6/nano-6.2.tar.xz
+SRC_NAME = nano-6.3
+SRC_URL = https://www.nano-editor.org/dist/v6/nano-6.3.tar.xz
 THISDIR = $(shell pwd)
 
 all: download_test extract_test config_test
@@ -29,6 +29,7 @@ configure:
 		--enable-tiny \
 		--enable-utf8 \
 		--disable-nls \
+		--with-libiconv-prefix=$(STAGEDIR) \
 		PKG_CONFIG_LIBDIR="$(STAGEDIR)/lib/pkgconfig/" \
 		--host=$(HOST_TARGET) \
 		--build=$(HOST_BUILD) ; \
