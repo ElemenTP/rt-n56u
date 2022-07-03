@@ -30,15 +30,19 @@ configure:
 		$(if $(LIBS_BUILD_SHARED),--disable-static,--enable-static) \
 		$(if $(LIBS_BUILD_SHARED),--enable-shared,--disable-shared) \
 		--disable-cpplibs \
+		--disable-asm-optimizations \
 		--disable-sse \
-		--disable-3dnow \
 		--disable-altivec \
-		--disable-doxgen-docs \
+		--disable-vsx \
+		--disable-avx \
+		--disable-stack-smash-protection \
+		--disable-doxygen-docs \
 		--disable-local-xmms-plugin \
 		--disable-xmms-plugin \
 		--disable-ogg \
 		--disable-oggtest \
 		--disable-debug \
+		--disable-examples \
 		--host=$(HOST_TARGET) \
 		--build=$(HOST_BUILD) ; \
 	)
