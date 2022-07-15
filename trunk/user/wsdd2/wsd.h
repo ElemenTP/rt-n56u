@@ -25,13 +25,17 @@
 #ifndef WSD_H
 #define WSD_H
 
-#define WSD_PORT		3702
-#define WSD_HTTP_PORT		WSD_PORT
-#define WSD_MCAST_ADDR		("239.255.255.250")
-#define WSD_MCAST6_ADDR		("FF02::C")
-#define WSD_HTTP_TIMEOUT	120
+#include <sys/types.h> // size_t
 
-enum wsd_action {
+#define WSD_PORT 3702
+#define WSD_HTTP_PORT WSD_PORT
+#define WSD_MCAST_ADDR ("239.255.255.250")
+#define WSD_MCAST6_ADDR ("FF02::C")
+#define WSD_HTTP_TIMEOUT 120
+#define WSD_RANDOM_DELAY 50000
+
+enum wsd_action
+{
 	WSD_ACTION_NONE,
 	WSD_ACTION_HELLO,
 	WSD_ACTION_BYE,
@@ -43,14 +47,18 @@ enum wsd_action {
 	WSD_ACTION_GETRESPONSE
 };
 
-struct wsd_req_info {
+struct wsd_req_info
+{
 	char *action;
 	char *msgid;
-	struct {
+	char *address;
+	struct
+	{
 		struct xmlns_qname *types[64];
 		size_t types_length;
 	} probe;
-	struct {
+	struct
+	{
 		char *endpoint;
 	} resolve;
 };
