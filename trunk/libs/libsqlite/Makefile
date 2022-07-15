@@ -1,4 +1,4 @@
-SRC_NAME=sqlite-autoconf-3390000
+SRC_NAME=sqlite-autoconf-3390100
 SRC_URL=https://www.sqlite.org/2022/$(SRC_NAME).tar.gz
 
 all: download_test extract_test config_test
@@ -32,7 +32,6 @@ configure:
 		--disable-fts3 \
 		--disable-fts4 \
 		--disable-fts5 \
-		--disable-json1 \
 		--disable-rtree \
 		--disable-session \
 		--disable-debug \
