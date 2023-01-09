@@ -2,7 +2,7 @@
 
 DIR="toolchain-3.4.x"
 DL_NAME="mipsel-linux-uclibc.tar.xz"
-DL_URL="https://github.com/ElemenTP/padavan-toolchain/releases/download/v1.2/$DL_NAME"
+DL_URL="https://github.com/ElemenTP/padavan-toolchain/releases/download/v1.3/$DL_NAME"
 
 if [ -d $DIR ]; then
 	echo "$DIR exists!"
