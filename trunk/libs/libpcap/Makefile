@@ -1,8 +1,8 @@
-SRC_NAME=libpcap-1.10.1
+SRC_NAME=libpcap-1.10.2
 SRC_URL=http://www.tcpdump.org/release/$(SRC_NAME).tar.gz
 
 all: download_test extract_test config_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
 	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
@@ -22,35 +22,34 @@ config_test:
 	fi )
 
 configure:
-	( cd $(SRC_NAME) ; \
-	ac_cv_netfilter_can_compile=no \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		--enable-static \
-		--enable-shared \
-		$(if $(CONFIG_IPV6),--enable-ipv6,--disable-ipv6) \
-		--disable-yydebug \
-		--disable-dbus \
-		--disable-usb \
-		--disable-bluetooth \
-		--with-pcap=linux \
-		--without-flex \
-		--without-bison \
-		--without-dag \
-		--without-septel \
-		--without-libnl \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DBDEBUG=Off \
+	-DBUILD_SHARED_LIBS=On \
+	-DBUILD_WITH_LIBNL=Off \
+	-DDISABLE_BLUETOOTH=On \
+	-DDISABLE_DAG=On \
+	-DDISABLE_DBUS=On \
+	-DDISABLE_DPDK=On \
+	-DDISABLE_RDMA=On \
+	-DDISABLE_SEPTEL=On \
+	-DDISABLE_TC=On \
+	-DENABLE_REMOTE=Off \
+	-DINET6=$(if $(CONFIG_IPV6),On,Off) \
+	-DNO_PROTOCHAIN=On \
+	-DYYDEBUG=Off \
+	.. \
 	)
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) distclean ; \
-	fi ; \
+	rm -rf $(SRC_NAME)/build
 	rm -f config_done
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/lib/libpcap.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/build/libpcap.so* $(ROMFSDIR)/lib

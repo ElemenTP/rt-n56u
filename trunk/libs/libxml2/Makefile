@@ -1,17 +1,17 @@
-SRC_NAME=libxml2-2.9.12
-SRC_URL=http://xmlsoft.org/sources/$(SRC_NAME).tar.gz
+SRC_NAME=libxml2-2.10.3
+SRC_URL=https://download.gnome.org/sources/libxml2/2.10/libxml2-2.10.3.tar.xz
 
 all: download_test extract_test config_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
-	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
-		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.gz $(SRC_URL); \
+	( if [ ! -f $(SRC_NAME).tar.xz ]; then \
+		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.xz $(SRC_URL); \
 	fi )
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
-		tar zxf $(SRC_NAME).tar.gz ; \
+		tar xf $(SRC_NAME).tar.xz ; \
 	fi )
 
 config_test:
@@ -22,52 +22,55 @@ config_test:
 	fi ) 
 
 configure:
-	( cd $(SRC_NAME) ; \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		--enable-static \
-		--disable-shared \
-		$(if $(CONFIG_IPV6),--enable-ipv6,--disable-ipv6) \
-		--without-catalog \
-		--without-debug \
-		--without-docbook \
-		--without-ftp \
-		--without-http \
-		--without-legacy \
-		--without-lzma \
-		--without-pattern \
-		--without-push \
-		--without-python \
-		--without-readline \
-		--without-regexps \
-		--without-iconv \
-		--without-iso8859x \
-		--with-c14n \
-		--with-html \
-		--with-output \
-		--with-reader \
-		--with-sax1 \
-		--with-schemas \
-		--with-threads \
-		--with-tree \
-		--with-valid \
-		--with-writer \
-		--with-xinclude \
-		--with-xpath \
-		--with-xptr \
-		--with-zlib=$(STAGEDIR) \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DBUILD_SHARED_LIBS=Off \
+	-DLIBXML2_WITH_C14N=On \
+	-DLIBXML2_WITH_CATALOG=Off \
+	-DLIBXML2_WITH_DEBUG=Off \
+	-DLIBXML2_WITH_FTP=Off \
+	-DLIBXML2_WITH_HTML=On \
+	-DLIBXML2_WITH_HTTP=Off \
+	-DLIBXML2_WITH_ICONV=Off \
+	-DLIBXML2_WITH_ICU=Off \
+	-DLIBXML2_WITH_ISO8859X=Off \
+	-DLIBXML2_WITH_LEGACY=Off \
+	-DLIBXML2_WITH_LZMA=Off \
+	-DLIBXML2_WITH_MEM_DEBUG=Off \
+	-DLIBXML2_WITH_MODULES=Off \
+	-DLIBXML2_WITH_OUTPUT=On \
+	-DLIBXML2_WITH_PATTERN=On \
+	-DLIBXML2_WITH_PROGRAMS=Off \
+	-DLIBXML2_WITH_PUSH=On \
+	-DLIBXML2_WITH_PYTHON=Off \
+	-DLIBXML2_WITH_READER=On \
+	-DLIBXML2_WITH_REGEXPS=On \
+	-DLIBXML2_WITH_RUN_DEBUG=Off \
+	-DLIBXML2_WITH_SAX1=On \
+	-DLIBXML2_WITH_SCHEMAS=On \
+	-DLIBXML2_WITH_SCHEMATRON=On \
+	-DLIBXML2_WITH_TESTS=Off \
+	-DLIBXML2_WITH_THREADS=On \
+	-DLIBXML2_WITH_THREAD_ALLOC=Off \
+	-DLIBXML2_WITH_TREE=On \
+	-DLIBXML2_WITH_VALID=On \
+	-DLIBXML2_WITH_WRITER=On \
+	-DLIBXML2_WITH_XINCLUDE=On \
+	-DLIBXML2_WITH_XPATH=On \
+	-DLIBXML2_WITH_XPTR=On \
+	-DLIBXML2_WITH_ZLIB=On \
+	.. \
 	)
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) distclean ; \
-	fi ; \
+	rm -rf $(SRC_NAME)/build
 	rm -f config_done
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
 

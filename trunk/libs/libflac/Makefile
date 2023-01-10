@@ -1,8 +1,8 @@
-SRC_NAME=flac-1.3.4
+SRC_NAME=flac-1.4.2
 SRC_URL=https://ftp.osuosl.org/pub/xiph/releases/flac/$(SRC_NAME).tar.xz
 
 all: download_test extract_test config_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
 	( if [ ! -f $(SRC_NAME).tar.xz ]; then \
@@ -11,8 +11,7 @@ download_test:
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
-		tar xJf  $(SRC_NAME).tar.xz ; \
-		patch -d $(SRC_NAME) -p1 -i ../flac-orig.patch ; \
+		tar xJf $(SRC_NAME).tar.xz ; \
 	fi )
 
 config_test:
@@ -23,40 +22,34 @@ config_test:
 	fi ) 
 
 configure:
-	( cd $(SRC_NAME) ; \
-	autoreconf -fi ; \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		$(if $(LIBS_BUILD_SHARED),--disable-static,--enable-static) \
-		$(if $(LIBS_BUILD_SHARED),--enable-shared,--disable-shared) \
-		--disable-cpplibs \
-		--disable-asm-optimizations \
-		--disable-sse \
-		--disable-altivec \
-		--disable-vsx \
-		--disable-avx \
-		--disable-stack-smash-protection \
-		--disable-doxygen-docs \
-		--disable-local-xmms-plugin \
-		--disable-xmms-plugin \
-		--disable-ogg \
-		--disable-oggtest \
-		--disable-debug \
-		--disable-examples \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DBUILD_CXXLIBS=Off \
+	-DBUILD_DOCS=Off \
+	-DBUILD_EXAMPLES=Off \
+	-DBUILD_PROGRAMS=Off \
+	-DBUILD_SHARED_LIBS=$(if $(LIBS_BUILD_SHARED),On,Off) \
+	-DBUILD_TESTING=Off \
+	-DBUILD_UTILS=Off \
+	-DINSTALL_MANPAGES=Off \
+	-DWITH_ASM=Off \
+	-DWITH_FORTIFY_SOURCE=Off \
+	-DWITH_OGG=Off \
+	-DWITH_STACK_PROTECTOR=Off \
+	.. \
 	)
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) distclean ; \
-	fi ; \
+	rm -rf $(SRC_NAME)/build
 	rm -f config_done
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
 ifeq ($(LIBS_BUILD_SHARED),y)
-	cp -fP $(DESTDIR)/lib/libFLAC.so* $(ROMFSDIR)/lib ;
+	cp -fP $(DESTDIR)/build/src/libFLAC.so* $(ROMFSDIR)/lib ;
 endif
