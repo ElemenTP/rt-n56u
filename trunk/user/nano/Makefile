@@ -1,5 +1,5 @@
-SRC_NAME = nano-6.3
-SRC_URL = https://www.nano-editor.org/dist/v6/nano-6.3.tar.xz
+SRC_NAME = nano-7.1
+SRC_URL = https://www.nano-editor.org/dist/v7/nano-7.1.tar.xz
 THISDIR = $(shell pwd)
 
 all: download_test extract_test config_test
