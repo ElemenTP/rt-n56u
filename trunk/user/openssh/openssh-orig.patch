@@ -1,14 +1,3 @@
-diff -rupw openssh-9.1p1.orig/Makefile.in openssh-9.1p1/Makefile.in
---- openssh-9.1p1.orig/Makefile.in	2023-01-10 18:23:18.296391295 +0800
-+++ openssh-9.1p1/Makefile.in	2023-01-10 18:36:50.298349154 +0800
-@@ -202,6 +202,7 @@ always:
- libssh.a: $(LIBSSH_OBJS)
- 	$(AR) rv $@ $(LIBSSH_OBJS)
- 	$(RANLIB) $@
-+	$(LD) $(LDFLAGS) -shared -o libssh.so $^
- 
- ssh$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHOBJS)
- 	$(LD) -o $@ $(SSHOBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS) $(GSSLIBS) $(CHANNELLIBS)
 diff -rupw openssh-9.1p1.orig/pathnames.h openssh-9.1p1/pathnames.h
 --- openssh-9.1p1.orig/pathnames.h	2023-01-10 18:23:18.296391295 +0800
 +++ openssh-9.1p1/pathnames.h	2023-01-10 18:36:50.298349154 +0800
