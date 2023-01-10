@@ -43,4 +43,4 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/build/libuv.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libuv.so* $(ROMFSDIR)/lib

@@ -51,5 +51,5 @@ install:
 
 romfs:
 ifeq ($(LIBS_BUILD_SHARED),y)
-	cp -fP $(DESTDIR)/build/src/libFLAC.so* $(ROMFSDIR)/lib ;
+	cp -fP $(DESTDIR)/lib/libFLAC.so* $(ROMFSDIR)/lib ;
 endif

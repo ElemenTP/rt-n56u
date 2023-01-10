@@ -52,4 +52,4 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/build/libpcap.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libpcap.so* $(ROMFSDIR)/lib

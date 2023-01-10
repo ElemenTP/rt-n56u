@@ -41,4 +41,4 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/build/libjson-c.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libjson-c.so* $(ROMFSDIR)/lib

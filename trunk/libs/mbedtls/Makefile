@@ -44,6 +44,6 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/library/libmbedcrypto.so* $(ROMFSDIR)/lib
-	cp -fP $(DESTDIR)/library/libmbedtls.so* $(ROMFSDIR)/lib
-	cp -fP $(DESTDIR)/library/libmbedx509.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libmbedcrypto.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libmbedtls.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libmbedx509.so* $(ROMFSDIR)/lib

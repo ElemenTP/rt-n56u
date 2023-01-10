@@ -38,4 +38,4 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/build/lib/libcares.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libcares.so* $(ROMFSDIR)/lib

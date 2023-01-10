@@ -46,5 +46,5 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/build/libevent-2.1.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/lib/libevent-2.1.so* $(ROMFSDIR)/lib
 
