@@ -20,9 +20,9 @@ diff -rupw curl.orig/Makefile.am curl/Makefile.am
  # We extend the standard uninstall with a custom hook:
  uninstall-hook:
 diff -rupw curl.orig/Makefile.in curl/Makefile.in
---- curl.orig/Makefile.in	2020-08-19 15:38:16.000000000 +0800
-+++ curl/Makefile.in	2020-08-19 20:58:06.895062329 +0800
-@@ -678,7 +678,7 @@ CLEANFILES = $(VC10_LIBVCXPROJ) $(VC10_S
+--- curl.orig/Makefile.in        2022-12-21 15:05:25.000000000 +0800
++++ curl/Makefile.in     2023-01-09 22:13:26.134317922 +0800
+@@ -680,7 +680,7 @@ CLEANFILES = $(VC10_LIBVCXPROJ) $(VC10_S
  
  bin_SCRIPTS = curl-config
  SUBDIRS = lib src
@@ -31,7 +31,7 @@ diff -rupw curl.orig/Makefile.in curl/Makefile.in
  pkgconfigdir = $(libdir)/pkgconfig
  pkgconfig_DATA = libcurl.pc
  LIB_VAUTH_CFILES = \
-@@ -1769,8 +1769,6 @@ cygwinbin:
+@@ -1774,8 +1774,6 @@ cygwinbin:
  # We extend the standard install with a custom hook:
  install-data-hook:
  	(cd include && $(MAKE) install)
