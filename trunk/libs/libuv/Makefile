@@ -1,8 +1,8 @@
-SRC_NAME=libuv-v1.44.1
-SRC_URL=https://dist.libuv.org/dist/v1.44.1/libuv-v1.44.1.tar.gz
+SRC_NAME=libuv-v1.44.2
+SRC_URL=https://dist.libuv.org/dist/v1.44.2/libuv-v1.44.2.tar.gz
 
 all: download_test extract_test config_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
 	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
@@ -22,24 +22,25 @@ config_test:
 	fi )
 
 configure:
-	( cd $(SRC_NAME) ; \
-	./autogen.sh ; \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		--disable-static \
-		--enable-shared \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DASAN=Off \
+	-DBUILD_TESTING=Off \
+	-DLIBUV_BUILD_BENCH=Off \
+	-DQEMU=Off \
+	-DTSAN=Off \
+	.. \
 	)
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) distclean ; \
-	fi ; \
+	rm -rf $(SRC_NAME)/build
 	rm -f config_done
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/lib/libuv.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/build/libuv.so* $(ROMFSDIR)/lib

@@ -1,6 +1,6 @@
-SRC_NAME=json-c-json-c-0.15-20200726
-SRC_URL=https://github.com/json-c/json-c/archive/json-c-0.15-20200726.tar.gz
-ARCHIVE_NAME=json-c-0.15-20200726
+SRC_NAME=json-c-json-c-0.16-20220414
+ARCHIVE_NAME=json-c-0.16-20220414
+SRC_URL=https://github.com/json-c/json-c/archive/$(ARCHIVE_NAME).tar.gz
 
 all: download_test extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
@@ -25,11 +25,11 @@ config_test:
 configure:
 	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
 	cmake \
-	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
-	-DCMAKE_TOOLCHAIN_FILE=../../cross-mipsel-linux.cmake \
 	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
 	-DBUILD_SHARED_LIBS=ON \
-	-DBUILD_STATIC_LIBS=ON \
+	-DBUILD_STATIC_LIBS=OFF \
 	.. \
 	)
 
@@ -41,4 +41,4 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/lib/libjson-c.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/build/libjson-c.so* $(ROMFSDIR)/lib

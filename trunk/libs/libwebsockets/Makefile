@@ -1,5 +1,5 @@
-SRC_NAME=libwebsockets-4.1.6
-SRC_URL=https://github.com/warmcat/libwebsockets/archive/v4.1.6.tar.gz
+SRC_NAME=libwebsockets-4.3.2
+SRC_URL=https://github.com/warmcat/libwebsockets/archive/v4.3.2.tar.gz
 
 all: download_test extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
@@ -12,7 +12,6 @@ download_test:
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar -xf $(SRC_NAME).tar.gz; \
-		patch -p1 -d $(SRC_NAME) < $(SRC_NAME).patch ; \
 	fi )
 
 config_test:
@@ -25,8 +24,9 @@ config_test:
 configure:
 	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
 	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
-	-DCMAKE_TOOLCHAIN_FILE=../../cross-mipsel-linux.cmake \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
 	-DBUILD_TESTING=OFF \
 	-DLWS_UNIX_SOCK=ON \
 	-DLWS_WITH_LIBUV=ON \
@@ -38,11 +38,14 @@ configure:
 	-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=ON \
 	-DLWS_WITHOUT_CLIENT=ON \
 	-DLWS_WITH_LEJP=ON \
+	-DLWS_WITH_LEJP_CONF=ON \
 	-DLWS_WITH_LWSAC=ON \
-	-DLWS_WITH_CUSTOM_HEADERS=OFF \
 	-DLWS_WITH_SEQUENCER=OFF \
 	-DLWS_ROLE_RAW_FILE=OFF \
 	-DLWS_WITH_HTTP2=OFF \
+	-DLWS_WITH_HTTP_BASIC_AUTH=OFF \
+	-DLWS_WITH_STATIC=OFF \
+	-DLWS_WITH_UDP=OFF \
 	-DLWS_IPV6=ON \
 	.. \
 	)
