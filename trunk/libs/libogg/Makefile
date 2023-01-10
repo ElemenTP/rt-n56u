@@ -2,7 +2,7 @@ SRC_NAME=libogg-1.3.5
 SRC_URL=http://downloads.xiph.org/releases/ogg/$(SRC_NAME).tar.xz
 
 all: download_test extract_test config_test
-	$(MAKE) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
 	( if [ ! -f $(SRC_NAME).tar.xz ]; then \
@@ -12,7 +12,6 @@ download_test:
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar xJf $(SRC_NAME).tar.xz; \
-		patch -d $(SRC_NAME) -p1 -i ../disable-doc.patch; \
 	fi )
  
 config_test:
@@ -23,21 +22,23 @@ config_test:
 	fi ) 
 
 configure:
-	( cd $(SRC_NAME) ; \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		--enable-static \
-		--disable-shared \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DBUILD_TESTING=Off \
+	-DBUILD_SHARED_LIBS=Off \
+	-DINSTALL_DOCS=Off \
+	.. \
 	)
 
 clean:
 	rm -f config_done
-	rm -rf $(SRC_NAME)
+	rm -rf $(SRC_NAME)/build
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
 

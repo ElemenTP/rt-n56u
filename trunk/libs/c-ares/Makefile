@@ -24,8 +24,9 @@ config_test:
 configure:
 	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
 	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
-	-DCMAKE_TOOLCHAIN_FILE=../../cross-mipsel-linux.cmake \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
 	.. \
 	)
 
@@ -37,4 +38,4 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/lib/libcares.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/build/lib/libcares.so* $(ROMFSDIR)/lib

@@ -2,7 +2,7 @@ SRC_NAME=libevent-2.1.12-stable
 SRC_URL=https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
 
 all: download_test extract_test config_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
 	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
@@ -12,7 +12,6 @@ download_test:
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar zxf $(SRC_NAME).tar.gz ; \
-		patch -d $(SRC_NAME) -p1 -i ../no_test.patch ; \
 	fi )
 
 config_test:
@@ -23,27 +22,29 @@ config_test:
 	fi )
 
 configure:
-	( cd $(SRC_NAME) ; \
-	./autogen.sh ; \
-	./configure \
-		--prefix=$(STAGEDIR) \
-		--disable-static \
-		--enable-shared \
-		--disable-debug-mode \
-		--disable-samples \
-		--host=$(HOST_TARGET) \
-		--build=$(HOST_BUILD) ; \
+	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_CONFIGURATION_TYPES=Release \
+	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DEVENT__COVERAGE=Off \
+	-DEVENT__DISABLE_BENCHMARK=On \
+	-DEVENT__DISABLE_DEBUG_MODE=On \
+	-DEVENT__DISABLE_REGRESS=On \
+	-DEVENT__DISABLE_SAMPLES=On \
+	-DEVENT__DISABLE_TESTS=On \
+	-DEVENT__LIBRARY_TYPE=SHARED \
+	.. \
 	)
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) distclean ; \
-	fi ; \
+	rm -rf $(SRC_NAME)/build
 	rm -f config_done
 
 install:
-	$(MAKE) -C $(SRC_NAME) install DESTDIR=""
+	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
-	cp -fP $(DESTDIR)/lib/libevent-2.1.so* $(ROMFSDIR)/lib
+	cp -fP $(DESTDIR)/build/libevent-2.1.so* $(ROMFSDIR)/lib
 

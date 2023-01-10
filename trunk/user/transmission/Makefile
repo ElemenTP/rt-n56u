@@ -32,24 +32,25 @@ config_test:
 
 configure:
 	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../../cross-mipsel-linux.cmake \
-		  -DCMAKE_INSTALL_PREFIX=/usr \
-		  -DCMAKE_BUILD_TYPE=Release \
-		  -DENABLE_CLI=OFF \
-		  -DENABLE_DAEMON=ON \
-		  -DENABLE_GTK=OFF \
-		  -DENABLE_LIGHTWEIGHT=ON \
-		  -DENABLE_NLS=OFF \
-		  -DENABLE_QT=OFF \
-		  -DENABLE_TESTS=OFF \
-		  -DINSTALL_DOC=OFF \
-		  -DUSE_SYSTEM_MINIUPNPC=OFF \
-		  -DUSE_SYSTEM_NATPMP=OFF \
-		  -DUSE_SYSTEM_UTP=OFF \
-		  -DWITH_SYSTEMD=OFF \
-		  -DWITH_INOTIFY=ON \
-		  -DWITH_CRYPTO=openssl \
-		  .. \
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_TOOLCHAIN_FILE=$(ROOTDIR)/cmake/cross-mipsel-linux.cmake \
+	-DENABLE_CLI=OFF \
+	-DENABLE_DAEMON=ON \
+	-DENABLE_GTK=OFF \
+	-DENABLE_LIGHTWEIGHT=ON \
+	-DENABLE_NLS=OFF \
+	-DENABLE_QT=OFF \
+	-DENABLE_TESTS=OFF \
+	-DINSTALL_DOC=OFF \
+	-DUSE_SYSTEM_MINIUPNPC=OFF \
+	-DUSE_SYSTEM_NATPMP=OFF \
+	-DUSE_SYSTEM_UTP=OFF \
+	-DWITH_SYSTEMD=OFF \
+	-DWITH_INOTIFY=ON \
+	-DWITH_CRYPTO=openssl \
+	.. \
 	)
 
 clean:
