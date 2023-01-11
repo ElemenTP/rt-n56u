@@ -34,7 +34,10 @@ configure:
 	-DEVENT__DISABLE_REGRESS=On \
 	-DEVENT__DISABLE_SAMPLES=On \
 	-DEVENT__DISABLE_TESTS=On \
+	-DEVENT__DISABLE_THREAD_SUPPORT=On \
+	-DEVENT__DISABLE_OPENSSL=On \
 	-DEVENT__LIBRARY_TYPE=SHARED \
+	-DCMAKE_SKIP_RPATH=True \
 	.. \
 	)
 
@@ -46,5 +49,6 @@ install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
 
 romfs:
+	cp -fP $(DESTDIR)/lib/libevent.so $(ROMFSDIR)/lib
 	cp -fP $(DESTDIR)/lib/libevent-2.1.so* $(ROMFSDIR)/lib
-
+	cp -fP $(DESTDIR)/lib/libevent_core* $(ROMFSDIR)/lib
